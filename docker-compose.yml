@@ -1,0 +1,44 @@
+services:
+  # x-logging: &logging
+  #   logging:
+  #     driver: loki
+  #     options:
+  #       loki-url: http://loki:3100/loki/api/v1/push
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    environment:
+      ALLOY_DEPLOY_MODE: docker
+    volumes:
+      - ./configs/alloy/config.alloy:/etc/alloy/config.alloy
+      - /var/run/docker.sock:/var/run/docker.sock
+      # bind proj logs ./project/logs:/temp/logs
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
+    ports:
+      - '12345:12345'
+
+  loki:
+    user: '1000'
+    image: grafana/loki:2.9.0
+    container_name: loki
+    volumes:
+      - ./configs/loki/loki.yaml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - '3100:3100'
+    
+  grafana:
+    image: grafana/grafana:9.5.6
+    container_name: grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    volumes:
+      - ./configs/grafana/provisioning.yml:/etc/grafana/provisioning/datasources
+
+volumes:
+  loki-data:
+
