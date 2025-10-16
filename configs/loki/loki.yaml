@@ -9,11 +9,11 @@ common:
     kvstore:
       store: inmemory
   replication_factor: 1
-  path_prefix: /loki
+  path_prefix: /tmp/loki
   storage:
     filesystem:
-      chunks_directory: /loki/chunks
-      rules_directory: /loki/rules
+      chunks_directory: /tmp/loki/chunks
+      rules_directory: /tmp/loki/rules
 
 schema_config:
   configs:

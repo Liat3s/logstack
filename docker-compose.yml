@@ -37,7 +37,9 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_BASIC_ENABLED=false
     volumes:
-      - ./configs/grafana/provisioning.yml:/etc/grafana/provisioning/datasources
+      - ./configs/grafana/provisioning.yml:/etc/grafana/provisioning/datasources/provisioning.yml
+    ports:
+      - '3030:3000'
 
 volumes:
   loki-data:
